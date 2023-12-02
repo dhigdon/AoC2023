@@ -10,8 +10,8 @@ using namespace std;
 
 string const names[]
 {
-   "zero", "one", "two", "three", "four",
-   "five", "six", "seven", "eight", "nine",
+   "one", "two", "three", "four", "five",
+   "six", "seven", "eight", "nine",
 };
 
 // Returns index of name in names
@@ -37,13 +37,14 @@ int eval( string const & str )
 
 int main( int argc, char **argv )
 {
+   string line;
    int sum = 0;
    auto file = ifstream( argv[1] );
    while ( file )
    {
-      string line{}, result{};
       file >> line;
 
+      string result;
       for ( char const * p = line.c_str(); *p; ++p )
       {
          if ( isdigit( *p ) )

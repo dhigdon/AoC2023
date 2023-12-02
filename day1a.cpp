@@ -11,10 +11,10 @@ using namespace std;
 int main( int argc, char **argv )
 {
    int sum = 0;
+   string str;
    auto file = ifstream( argv[1] );
    while (file)
    {
-      string str;
       file >> str;
       if ( !str.empty() )
       {
