@@ -22,7 +22,7 @@ inline auto split( std::string_view src, char delim )
       start = end + 1;
       end = src.find( delim, start );
    }
-   result.push_back( src.substr( start, end ) );
+   result.push_back( src.substr( start ) );
 
    return result;
 }
