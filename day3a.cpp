@@ -2,11 +2,7 @@
 // Reworked from original to make part 2 possible.
 // by Dan Higdon
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <cctype>
+#include "aoc.h"
 
 using namespace std;
 

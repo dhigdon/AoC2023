@@ -1,15 +1,11 @@
 // Advent of Code 2023 - Day 1 part 1: Trebuchet?!
 // by Dan Higdon
 
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
+#include "aoc.h"
 
-using namespace std;
-
-string const names[]
+std::string_view const names[]
 {
+   "zero",
    "one", "two", "three", "four", "five",
    "six", "seven", "eight", "nine",
 };
@@ -20,7 +16,7 @@ int to_num( char const * const name )
    // There is certainly a better way to do this.... 
    for ( int i = 0; i < 10; ++i )
    {
-      string const n( name, names[i].size() );
+      std::string const n( name, names[i].size() );
 
       // See if n is the prefix of name
       if ( names[i] == n )
@@ -29,38 +25,38 @@ int to_num( char const * const name )
    return -1;
 }
 
-int eval( string const & str )
+int eval( std::vector<int> const & str )
 {
    if ( str.empty() ) return 0;
-   return (str.front() - '0') * 10 + (str.back() - '0');
+   return str.front() * 10 + str.back();
 }
 
 int main( int argc, char **argv )
 {
-   string line;
+   std::string line;
    int sum = 0;
-   auto file = ifstream( argv[1] );
-   while ( file )
+   std::ifstream file( argv[1] );
+   while ( file >> line )
    {
-      file >> line;
-
-      string result;
+      std::vector<int> result;
       for ( char const * p = line.c_str(); *p; ++p )
       {
          if ( isdigit( *p ) )
          {
-            result.push_back( *p );
+            result.push_back( *p - '0' );
          }
          else if ( int n = to_num( p ); n >= 0 )
          {
-            result.push_back( n + '0' );
+            result.push_back( n );
          }
       }
 
-      sum += eval( result );
+      int val = eval( result );
+
+      sum += val;
    }
 
-   cout << sum << endl;
+   std::cout << sum << std::endl;
 
    return 0;
 }

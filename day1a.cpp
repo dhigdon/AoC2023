@@ -1,31 +1,26 @@
 // Advent of Code 2023 - Day 1 part 1: Trebuchet?!
 // by Dan Higdon
 
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
-
-using namespace std;
+#include "aoc.h"
 
 int main( int argc, char **argv )
 {
    int sum = 0;
-   string str;
-   auto file = ifstream( argv[1] );
-   while (file)
+   std::string str;
+   std::ifstream file( argv[1] );
+   while (file >> str)
    {
-      file >> str;
       if ( !str.empty() )
       {
-         string result;
-         copy_if( str.begin(), str.end(), back_inserter( result ), isdigit );
+         std::string result;
+         std::copy_if( str.begin(), str.end(), back_inserter( result ), std::isdigit );
 
          int value = (result.front() - '0') * 10 + (result.back() - '0');
+         std::cout << "value " << value << std::endl;
          sum += value;
       }
    }
-   cout << sum << endl;
+   std::cout << sum << std::endl;
 
    return 0;
 }

@@ -1,10 +1,8 @@
 // Advent of Code 2023, Day 2 - Cube Conundrum
 // by Dan Higdon
 
-#include <iostream>
-#include <fstream>
+#include "aoc.h"
 #include <sstream>
-#include <algorithm>
 
 // Just makes things so much nicer....
 #include "split.h"
@@ -48,11 +46,11 @@ std::ostream & operator<< (std::ostream & out, Hand const & hand )
 void parse_color( std::string_view view, Hand & hand )
 {
    // Color format is "### NAME"
-   char * next{};
-   int const value = (int)::strtol( view.data(), &next, 10 );
+   size_t next{0};
+   int const value = (int)::svtol( view, &next, 10 );
 
    // Note that the number and name are separated by exactly 1 space
-   char const color = view[ next - view.data() + 1 ];
+   char const color = view[ next + 1 ];
 
    // And since the colors differ in their first letter...
    if ( color == 'r' ) hand.red   = value;

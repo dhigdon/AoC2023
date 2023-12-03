@@ -1,12 +1,7 @@
 // Advent of Code, Day 3 - Gear Ratios
-//
+// by Dan Higdon
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <string_view>
-#include <vector>
-#include <cctype>
+#include "aoc.h"
 
 using namespace std;
 
@@ -125,7 +120,7 @@ int main( int argc, char *argv[] )
             end = start + num.size();
             if ( is_partnum( y, start, end ) )
             {
-               int value = stoi( string{ num } );
+               int value = svtoi( num );
                sum += value;
             }
 
