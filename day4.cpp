@@ -5,18 +5,15 @@
 using namespace std;
 
 // Utility to read a sequence of space delimited numbers
-vector<int> read_numbers( string_view sv )
+void read_numbers( vector<int> & result, string_view sv )
 {
-   vector<int> result;
-
+   result.clear();
    while (!sv.empty())
    {
       size_t idx = 0;
       result.push_back(svtol(sv, &idx));
       sv = sv.substr(idx);
    }
-
-   return result;
 }
 
 int main(int argc, char *argv[])
@@ -34,6 +31,12 @@ int main(int argc, char *argv[])
    vector<long> cards;
    long score = 0;
 
+   // Specualtive capacity needs (alloc optimization)
+   winners.reserve(16);
+   numbers.reserve(32);
+   winning_numbers.reserve(256);
+   cards.reserve(256);
+
    // Read the card data
    ifstream in{ argv[1], ifstream::in };
    string line;
@@ -44,8 +47,8 @@ int main(int argc, char *argv[])
       int const sep   = view.find('|');
 
       // Split the view and find the numbers within
-      winners = read_numbers(view.substr(colon + 1, sep - colon - 2));
-      numbers = read_numbers(view.substr(sep + 1));
+      read_numbers(winners, view.substr(colon + 1, sep - colon - 2));
+      read_numbers(numbers, view.substr(sep + 1));
 
       // Tally winning numbers
       int tally = 0;
