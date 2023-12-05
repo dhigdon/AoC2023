@@ -1,7 +1,7 @@
 // Utility - split a string_view into a vector of string_views
 // by Dan Higdon
 
-#pragma(once)
+#pragma once
 #ifndef SPLIT_H
 #define SPLIT_H
 

@@ -1,7 +1,7 @@
 // string_view to integer
 // "Fixes" the missing stoi and friends
 
-#pragma(once)
+#pragma once
 #ifndef SVTOI_H
 #define SVTOI_H
 
