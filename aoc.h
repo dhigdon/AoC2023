@@ -5,6 +5,8 @@
 #include <cctype>
 #include <iostream>
 #include <fstream>
+#include <numeric>
+#include <optional>
 #include <string>
 #include <vector>
 
