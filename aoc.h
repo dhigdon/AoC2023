@@ -3,8 +3,11 @@
 // C++ library funtions we use
 #include <algorithm>
 #include <cctype>
-#include <iostream>
 #include <fstream>
+#include <functional>
+#include <iostream>
+#include <optional>
+#include <numeric>
 #include <string>
 #include <vector>
 

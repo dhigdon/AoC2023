@@ -1,10 +1,7 @@
 // Advent of Code 2023, Day 5 - If You Give A Seed A Fertilizer
 // by Dan Higdon
 
-#include "../AoC.h"
-#include <optional>
-#include <numeric>
-#include <functional>
+#include "aoc.h"
 
 using namespace std;
 using value_t = unsigned long;
