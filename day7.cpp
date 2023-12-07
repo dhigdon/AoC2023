@@ -28,7 +28,7 @@ constexpr std::string_view type_names[]
    "FiveOfAKind"sv
 };
 
-constexpr std::string_view lookup{ "0123456789TJQKA"sv };
+constexpr std::string_view lookup{ "23456789TJQKA"sv };
 
 // Returns the length of a run of 'ch'.
 // For example, find_run("aaabc") == 3
@@ -46,9 +46,9 @@ int run_length(std::string_view sv)
 
 struct Hand
 {
-   std::vector<int> cards;
-   HandType type;
-   int bid;
+   std::vector<int> cards{};  // reserved_vector<int, 5>, ideally
+   HandType type{ HighCard };
+   int bid{ 0 };
 };
 
 std::ostream & operator<<(std::ostream & out, Hand const & hand)
@@ -61,56 +61,40 @@ std::ostream & operator<<(std::ostream & out, Hand const & hand)
    return out;
 }
 
-HandType evaluate(std::string_view sv)
+HandType evaluate( std::string_view sv )
 {
-   // Categorize
-   switch (run_length(sv))
+   // sv is already sorted. Split it into runs, ignoring length==1 runs
+   // Note that with only 5 cards possible, and rejecting 1-card runs,
+   // we can only have one or two runs, so we'll store them in a pair.
+
+   std::pair<int, int> runs{ 0,0 };
+
+   // Find the first run > 1 (if any)
+   do
    {
-   case 5: return FiveOfAKind;
-   case 4: return FourOfAKind;
-   case 3:
-      if (sv[3] == sv[4]) return FullHouse;
-      return ThreeOfAKind;
+      runs.first = run_length( sv );
+      sv.remove_prefix( runs.first );
+   } while ( runs.first == 1 );
 
-   case 2:
-      if (sv[2] == sv[3] && sv[3] == sv[4]) return FullHouse;
-      if (sv[2] == sv[3]) return TwoPair;
-      if (sv[3] == sv[4]) return TwoPair;
-      return OnePair;
- 
-   case 1:
-      // First character is unique.
-      // Try again, but with 4 card hand
-      sv.remove_prefix(1);
-      switch (run_length(sv))
-      {
-      case 4:
-         return FourOfAKind;
+   // Find the second run > 1 (if any)
+   do
+   {
+      runs.second = run_length( sv );
+      sv.remove_prefix( runs.second );
+   } while ( runs.second == 1 );
 
-      case 3:
-         return ThreeOfAKind;
+   // Make sure they're ordered
+   if ( runs.second > runs.first ) std::swap( runs.first, runs.second );
 
-      case 2:
-         if (sv[2] == sv[3]) return TwoPair;
-         return OnePair;
+   // Now, categorize the hands by their run lengths
+   if ( runs == std::make_pair( 5, 0 ) ) return FiveOfAKind;
+   if ( runs == std::make_pair( 4, 0 ) ) return FourOfAKind;
+   if ( runs == std::make_pair( 3, 2 ) ) return FullHouse;
+   if ( runs == std::make_pair( 3, 0 ) ) return ThreeOfAKind;
+   if ( runs == std::make_pair( 2, 2 ) ) return TwoPair;
+   if ( runs == std::make_pair( 2, 0 ) ) return OnePair;
 
-      case 1:
-         // Try again with 3 card hand
-         sv.remove_prefix(1);
-         switch (run_length(sv))
-         {
-         case 3: return ThreeOfAKind;
-         case 2: return OnePair;
-         case 1:
-            // Try again with 2 card hand
-            if (sv[1] == sv[2]) return OnePair;
-            break;
-         }
-         return HighCard;
-      }
-   }
-
-   std::cout << "oops\n";
+   // Otherwise, it's just HighCard
    return HighCard;
 }
 
@@ -121,7 +105,7 @@ Hand parse_hand( std::string_view sv )
    auto const parts = split(sv, ' ');
    result.cards.reserve(parts[0].size());
    for (char c : parts[0])
-      result.cards.push_back(lookup.find(c));
+      result.cards.push_back((int)lookup.find(c));
    result.bid = svtol(parts[1]);
 
    // Finaly, decide what hand this is
