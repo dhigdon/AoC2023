@@ -29,40 +29,24 @@ bool terminate_part1( string const &pos )
    return pos == "ZZZ";
 }
 
-long run1( string const & start,
-           string_view input,
-           MapSet const & maps,
-           bool (*term)(string const&) )
+int64_t run1( string const & start,
+              string_view input,
+              MapSet const & maps,
+              bool (*term)(string const &) )
 {
-   // cout << "Run " << start << " = ";
-
-   long count = 0;
-   string_view instr;
+   int64_t count = 0;
 
    string pos = start;
    while (!term(pos))
    {
-      if (instr.empty()) instr = input;
-
-      while (!instr.empty())
+      auto next = maps.find(pos);
+      switch (input[count++ % input.size()])
       {
-         char const turn = instr[0];
-         instr.remove_prefix(1);
-         ++count;
-
-         auto next = maps.find(pos);
-         if (next != maps.end())
-         {
-            switch (turn)
-            {
-            case 'L': pos = next->second.left; break;
-            case 'R': pos = next->second.right; break;
-            }
-         }
+      case 'L': pos = next->second.left; break;
+      case 'R': pos = next->second.right; break;
       }
    }
 
-   // cout << count << endl;
    return count;
 }
 
@@ -86,13 +70,15 @@ bool terminate_part2(string const &pos)
    return pos[pos.size()-1] == 'Z';
 }
 
-long long run2( string_view input, MapSet const & maps )
+int64_t run2( string_view input, MapSet const & maps )
 {
-   long long result = 1;
-   for (string const & start : get_starts(maps))
-      result = lcm( result, run1(start, input, maps, terminate_part2 ));
+   auto run = [&](int64_t total, string const & start) -> int64_t 
+   {
+      return lcm(total, run1(start, input, maps, terminate_part2));
+   };
 
-   return result;
+   auto const starts = get_starts(maps);
+   return accumulate(begin(starts), end(starts), int64_t(1), run);
 }
 
 int main( int argc, char *argv[])
@@ -109,20 +95,17 @@ int main( int argc, char *argv[])
    string instructions;
    getline(in, instructions);
 
-   // Skip blank line
-   getline(in, line);
+   getline(in, line); // Skip blank line
 
    MapSet maps;
-   while (getline( in, line ))
-   {
-      add_node( line, maps );
-   }
+   while (getline( in, line )) add_node(line, maps);
 
    // Part 1
-   cout << "Part 1: "
-     << run1("AAA", instructions, maps, terminate_part1 )
-     << endl;
-   cout << "Part 2: "
+   cout
+      << "Part 1: "
+      << run1("AAA", instructions, maps, terminate_part1 )
+      << endl
+      << "Part 2: "
       << run2( instructions, maps )
       << endl;
 
