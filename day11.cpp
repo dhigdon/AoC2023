@@ -66,7 +66,7 @@ void expand(SGalaxies & galaxies, value_t expand)
    }
 }
 
-value_t dist(SPos a, SPos b)
+inline value_t dist(SPos a, SPos b)
 {
    return abs(a.x - b.x) + abs(a.y - b.y);
 }
